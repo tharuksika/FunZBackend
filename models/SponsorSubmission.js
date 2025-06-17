@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
 
 const sponsorSubmissionSchema = new mongoose.Schema({
-  sponsorName: { type: String, required: true },
-  email: { type: String, required: true },
+  sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  helpRequestId: { type: mongoose.Schema.Types.ObjectId, ref: 'HelpRequest', required: true },
   amount: { type: Number, required: true },
-  message: { type: String },
-  clubId: { type: mongoose.Schema.Types.ObjectId, ref: 'Club' },
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
-  submittedAt: { type: Date, default: Date.now }
-});
+  message: { type: String, required: true },
+   sponsoredAt: { type: Date, default: Date.now
+  },
+}, { timestamps: true });
 
 export default mongoose.model('SponsorSubmission', sponsorSubmissionSchema);

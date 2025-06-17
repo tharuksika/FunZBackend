@@ -1,13 +1,21 @@
-// import express from 'express';
-// import { createFeedback, getFeedbacks } from '../controllers/feedbackController.js';
-// import { protect } from '../middleware/authMiddleware.js';
+// routes/feedbackRoutes.js
+import express from 'express';
+import {
+  createFeedback,
+  getApprovedFeedback,
+  approveFeedback
+} from '../controllers/feedbackController.js';
+import { protect, isAdmin } from '../middlewares/authMiddleware.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// // Create new feedback (protected)
-// router.post('/', protect, createFeedback);
+// Club submits feedback
+router.post('/', protect, createFeedback);
 
-// // Get all feedback (public)
-// router.get('/', getFeedbacks);
+// Public view of approved feedback
+router.get('/', getApprovedFeedback);
 
-// export default router;
+// Admin approves feedback
+router.patch('/:id/approve', protect, isAdmin, approveFeedback);
+
+export default router;

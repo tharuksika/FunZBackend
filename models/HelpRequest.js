@@ -1,26 +1,17 @@
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-// const feedbackSchema = new mongoose.Schema(
-//   {
-//     user: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: 'User',
-//       required: true,
-//     },
-//     message: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     rating: {
-//       type: Number,
-//       min: 1,
-//       max: 5,
-//     },
-//   },
-//   { timestamps: true }
-// );
+const helpRequestSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  title: String,
+  description: String,
+  category: { type: String, enum: ['game', 'athletics'] },
+  videoUrl: String,
+  certificateUrl: String,
+  startDate: Date,
+  endDate: Date,
+  isExpired: { type: Boolean, default: false },
+  isSponsored: { type: Boolean, default: false }
+}, { timestamps: true });
 
-// const Feedback = mongoose.model('Feedback', feedbackSchema);
-
-// export default Feedback;
+const HelpRequest = mongoose.model('HelpRequest', helpRequestSchema);
+export default HelpRequest;

@@ -1,38 +1,34 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import cors from 'cors';
+
+// Import routes
 import authRoutes from './routes/authRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-// import donationRoutes from './routes/donationRoutes.js';
-// import feedbackRoutes from './routes/feedbackRoutes.js';
-// import helpRequestRoutes from './routes/helpRequestRoutes.js';
+import clubRoutes from './routes/clubRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import helpRequestRoutes from './routes/helpRequestRoutes.js';
 import sponsorRoutes from './routes/sponsorRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
-app.use('/api/sponsor', sponsorRoutes);
-
-
-
-
+// Use routes
 app.use('/api/auth', authRoutes);
+app.use('/api/clubs', clubRoutes); // ✅ fixed here (was /api/club)
+app.use('/api/admin', adminRoutes); 
+app.use('/api/help', helpRequestRoutes);
+app.use('/api/sponsor', sponsorRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
-// app.use('/api/users', userRoutes);
-app.use('/api/users', authRoutes); 
-
-// app.use('/api/donations', donationRoutes);
-// app.use('/api/feedback', feedbackRoutes);
-// app.use('/api/help-requests', helpRequestRoutes);
-
-app.use('/api/admin', adminRoutes); // 👈 This line is very important
-
+// Optional root route
 app.get('/', (req, res) => {
-  res.send('FUNDz API is running...');
+  res.send('API is running...');
 });
 
 const PORT = process.env.PORT || 5000;

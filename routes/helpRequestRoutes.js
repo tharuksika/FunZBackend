@@ -1,13 +1,13 @@
-// import express from 'express';
-// import { createHelpRequest, getHelpRequests } from '../controllers/helpRequestController.js';
-// import { protect } from '../middleware/authMiddleware.js';
+import express from 'express';
+import { createHelpRequest, getHelpRequests } from '../controllers/helpRequestController.js';
+import { protect } from '../middlewares/authMiddleware.js'; // ✅ Import middleware
 
-// const router = express.Router();
+const router = express.Router();
 
-// // Create a new help request (protected)
-// router.post('/', protect, createHelpRequest);
+// ✅ Protected route: Only logged-in club can create
+router.post('/create', protect, createHelpRequest);
 
-// // Get all help requests (public)
-// router.get('/', getHelpRequests);
+// Optional: Only admin should use this, so add protect + isAdmin if needed
+router.get('/all', protect, getHelpRequests);
 
-// export default router;
+export default router;

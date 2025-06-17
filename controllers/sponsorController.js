@@ -1,53 +1,39 @@
+import HelpRequest from '../models/HelpRequest.js';
 import SponsorSubmission from '../models/SponsorSubmission.js';
 
-export const submitSponsorship = async (req, res) => {
+export const getApprovedHelpRequests = async (req, res) => {
   try {
-    const { sponsorName, email, amount, message, clubId } = req.body;
+    const helpRequests = await HelpRequest.find({ isApproved: true });
+    res.json(helpRequests);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching help requests' });
+  }
+};
+
+export const sponsorHelpRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { amount, message } = req.body;
 
     const submission = new SponsorSubmission({
-      sponsorName,
-      email,
+      sponsorId: req.user._id,
+      helpRequestId: id,
       amount,
       message,
-      clubId
     });
 
     await submission.save();
-
-    res.status(201).json({ message: 'Sponsorship submitted successfully', data: submission });
-  } catch (error) {
-    res.status(500).json({ message: 'Submission failed', error: error.message });
+    res.status(201).json({ message: 'Help request sponsored successfully', submission });
+  } catch (err) {
+    res.status(500).json({ message: 'Error sponsoring help request' });
   }
 };
 
-
-export const getAllSubmissions = async (req, res) => {
+export const getMySponsorships = async (req, res) => {
   try {
-    const submissions = await SponsorSubmission.find().populate('clubId', 'name');
-    res.status(200).json(submissions);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching submissions', error: error.message });
-  }
-};
-
-
-export const updateSubmissionStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    const updated = await SponsorSubmission.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ message: 'Submission not found' });
-    }
-
-    res.status(200).json({ message: 'Status updated', data: updated });
-  } catch (error) {
-    res.status(500).json({ message: 'Update failed', error: error.message });
+    const sponsorships = await SponsorSubmission.find({ sponsorId: req.user._id });
+    res.json(sponsorships);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching sponsorships' });
   }
 };

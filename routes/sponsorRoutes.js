@@ -1,14 +1,23 @@
 import express from 'express';
-import { submitSponsorship, getAllSubmissions, updateSubmissionStatus } from '../controllers/sponsorController.js';
-
+import {
+  getApprovedHelpRequests,
+  sponsorHelpRequest,
+  getMySponsorships,
+} from '../controllers/sponsorController.js';
+import { protect, isSponsor } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-// POST /api/sponsor/submit
-router.post('/submit', submitSponsorship);
+// All sponsor routes need protection and sponsor role check
+router.use(protect, isSponsor);
 
-router.get('/all', getAllSubmissions); // 👈 Now supports GET
+// ✅ View all approved help requests
+router.get('/help-requests', getApprovedHelpRequests);
 
-router.put('/update/:id', updateSubmissionStatus);
+// ✅ Sponsor a help request
+router.post('/sponsor/:id', sponsorHelpRequest);
+
+// ✅ View all your sponsorships
+router.get('/my-sponsorships', getMySponsorships);
 
 export default router;
